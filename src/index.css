@@ -624,6 +624,12 @@ body {
   color: #aaa8a0;
 }
 
+@media (hover: none) {
+  #message-input {
+    font-size: 16px;
+  }
+}
+
 /* ── Input actions row (attach + send) ─────────────────────────────────── */
 
 .input-actions {
