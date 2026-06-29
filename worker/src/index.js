@@ -25,6 +25,18 @@ export default {
       return new Response('Invalid JSON', { status: 400, headers: corsHeaders() });
     }
 
+    // TODO: This is hardcoded, and will override ``safePrompt``.
+    const model = (body.model ?? '').toLowerCase();
+    if (model.includes('google/') || model.includes('gemini')) {
+      body.safety_settings = [
+        { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_CIVIC_INTEGRITY',   threshold: 'BLOCK_NONE' },
+      ];
+    }
+
     const upstream = await fetch(OPENROUTER_URL, {
       method: 'POST',
       headers: {

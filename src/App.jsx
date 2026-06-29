@@ -5,15 +5,9 @@ import MessageList from './components/MessageList.jsx';
 import InputArea from './components/InputArea.jsx';
 import SettingsModal from './components/SettingsModal.jsx';
 import { streamChat } from './utils/openrouter.js';
+import { DEFAULT_SETTINGS } from './config.js';
 
 const WORKER_URL = import.meta.env.VITE_WORKER_URL ?? '';
-
-const DEFAULT_SETTINGS = {
-  model: 'qwen/qwen3-flash',
-  temperature: 1.0,
-  maxTokens: '',
-  systemPrompt: '',
-};
 
 function loadSettings() {
   try {

@@ -9,6 +9,7 @@ export async function streamChat({ workerUrl, messages, settings, onChunk, onErr
     messages,
     stream: true,
     temperature: parseFloat(settings.temperature),
+    safe_prompt: settings.safePrompt,
   };
   if (settings.maxTokens) {
     body.max_tokens = parseInt(settings.maxTokens, 10);
