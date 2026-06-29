@@ -3,81 +3,148 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anon OpenRouter Chat</title>
+  <title>Anon OpenRouter Chat – Conversation</title>
   <link rel="stylesheet" href="/static/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <div class="layout">
+
     <header class="header">
-      <span class="header-title">Anon OpenRouter Chat</span>
-      <div class="header-actions">
-        <button class="icon-btn" id="import-btn" title="Import chat">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      <!-- XP Luna title bar -->
+      <div class="xp-titlebar">
+        <div class="xp-titlebar-left">
+          <!-- MSN butterfly icon -->
+          <svg class="xp-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <ellipse cx="5.5" cy="6.5" rx="4.2" ry="5.5" fill="#f47920" opacity="0.92" transform="rotate(-18 5.5 6.5)"/>
+            <ellipse cx="10.5" cy="6.5" rx="4.2" ry="5.5" fill="#f47920" opacity="0.92" transform="rotate(18 10.5 6.5)"/>
+            <ellipse cx="5.5" cy="10.5" rx="3.8" ry="4.5" fill="#fbb040" opacity="0.85" transform="rotate(18 5.5 10.5)"/>
+            <ellipse cx="10.5" cy="10.5" rx="3.8" ry="4.5" fill="#fbb040" opacity="0.85" transform="rotate(-18 10.5 10.5)"/>
+            <ellipse cx="8" cy="8.5" rx="1.1" ry="4.5" fill="#3a2000"/>
+            <circle cx="8" cy="4.5" r="1.6" fill="#4a3010"/>
           </svg>
-        </button>
-        <button class="icon-btn" id="export-btn" title="Export chat">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-        </button>
-        <button class="new-chat-btn" id="new-chat-btn" title="New chat">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 5v14M5 12h14"/>
-          </svg>
-          New chat
-        </button>
+          <span class="xp-titlebar-text">Anon OpenRouter Chat – Conversation</span>
+        </div>
+        <div class="xp-window-controls" aria-hidden="true">
+          <button class="xp-ctrl xp-ctrl-min" tabindex="-1">–</button>
+          <button class="xp-ctrl xp-ctrl-max" tabindex="-1">□</button>
+          <button class="xp-ctrl xp-ctrl-close" tabindex="-1">✕</button>
+        </div>
       </div>
+
+      <!-- Toolbar row: contact info + action buttons -->
+      <div class="header-toolbar">
+        <div class="contact-info">
+          <span class="status-dot"></span>
+          <strong class="contact-name">AI Assistant</strong>
+          <span class="contact-status-txt">&nbsp;– Online</span>
+        </div>
+        <div class="header-actions">
+          <button class="xp-toolbar-btn" id="import-btn" title="Import chat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Import
+          </button>
+          <button class="xp-toolbar-btn" id="export-btn" title="Export chat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Export
+          </button>
+          <button class="xp-toolbar-btn" id="new-chat-btn" title="New chat">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            New chat
+          </button>
+        </div>
+      </div>
+
       <input type="file" id="import-file-input" accept=".json" class="hidden" />
     </header>
 
     <main class="messages" id="messages">
       <div class="empty-state" id="empty-state">
         <div class="empty-icon">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          <!-- Large MSN butterfly -->
+          <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
+            <ellipse cx="19" cy="22" rx="14" ry="18" fill="#f47920" opacity="0.55" transform="rotate(-18 19 22)"/>
+            <ellipse cx="37" cy="22" rx="14" ry="18" fill="#f47920" opacity="0.55" transform="rotate(18 37 22)"/>
+            <ellipse cx="19" cy="36" rx="12" ry="15" fill="#fbb040" opacity="0.55" transform="rotate(18 19 36)"/>
+            <ellipse cx="37" cy="36" rx="12" ry="15" fill="#fbb040" opacity="0.55" transform="rotate(-18 37 36)"/>
+            <ellipse cx="28" cy="29" rx="3.5" ry="14" fill="#3a2000" opacity="0.7"/>
+            <circle cx="28" cy="15" r="5" fill="#4a3010" opacity="0.7"/>
           </svg>
         </div>
-        <p>Start a conversation</p>
+        <p class="empty-title">No messages yet</p>
+        <p class="empty-sub">Type a message below and click Send to start chatting.</p>
       </div>
     </main>
 
     <footer class="input-area">
+      <!-- Decorative MSN format toolbar -->
+      <div class="format-toolbar" aria-hidden="true">
+        <select class="fmt-select fmt-font" tabindex="-1" disabled>
+          <option>Tahoma</option>
+          <option>Arial</option>
+          <option>Comic Sans MS</option>
+          <option>Times New Roman</option>
+        </select>
+        <select class="fmt-select fmt-size" tabindex="-1" disabled>
+          <option>10</option>
+          <option>12</option>
+          <option>14</option>
+        </select>
+        <span class="fmt-sep"></span>
+        <button class="fmt-btn" tabindex="-1" title="Bold"><b>B</b></button>
+        <button class="fmt-btn" tabindex="-1" title="Italic"><i>I</i></button>
+        <button class="fmt-btn" tabindex="-1" title="Underline"><u>U</u></button>
+        <span class="fmt-sep"></span>
+        <button class="fmt-btn fmt-color" tabindex="-1" title="Text colour">
+          <span>A</span>
+        </button>
+        <button class="fmt-btn fmt-emoji" tabindex="-1" title="Emoticons">☺</button>
+      </div>
+
+      <!-- Input wrapper (sunken text area) -->
       <div class="input-wrapper">
         <div class="image-preview-bar hidden" id="image-preview-bar">
           <div class="image-preview-item">
             <img id="image-preview" src="" alt="Attached image" />
             <button class="remove-image-btn" id="remove-image-btn" aria-label="Remove image">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">
                 <path d="M18 6L6 18M6 6l12 12"/>
               </svg>
             </button>
           </div>
         </div>
         <div class="input-row">
-          <button class="icon-btn" id="attach-btn" aria-label="Attach image" title="Attach image">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-            </svg>
-          </button>
           <textarea
             id="message-input"
-            placeholder="Message…"
+            placeholder="Type a message..."
             rows="1"
             aria-label="Message input"
           ></textarea>
-          <button class="send-btn" id="send-btn" aria-label="Send message" disabled>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-            </svg>
-          </button>
         </div>
+      </div>
+
+      <!-- Bottom row: attach + send -->
+      <div class="input-actions">
+        <button class="xp-toolbar-btn icon-btn" id="attach-btn" aria-label="Attach image" title="Attach image">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+          </svg>
+          Attach
+        </button>
+        <button class="send-btn" id="send-btn" aria-label="Send message" disabled>
+          Send
+        </button>
         <input type="file" id="file-input" accept="image/*" class="hidden" />
       </div>
     </footer>
-  </div>
 
+  </div>
   <script src="/static/app.js"></script>
 </body>
 </html>
