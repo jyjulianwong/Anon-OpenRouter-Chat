@@ -1,4 +1,4 @@
-# PrivateChat
+# Anon OpenRouter Chat
 
 A minimal local web chat interface backed by [OpenRouter](https://openrouter.ai).
 
@@ -28,7 +28,7 @@ OPENROUTER_MODEL=anthropic/claude-sonnet-4-5
 **3. Run**
 
 ```
-uv run privatechat
+uv run anon_openrouter_chat
 ```
 
 Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.

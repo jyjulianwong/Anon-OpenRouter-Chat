@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from privatechat.config import (
+from anon_openrouter_chat.config import (
     OPENROUTER_API_KEY,
     OPENROUTER_MODEL,
     LLM_TEMPERATURE,
@@ -31,7 +31,7 @@ from privatechat.config import (
 STATIC_DIR = Path(__file__).parent / "static"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-app = FastAPI(title="PrivateChat")
+app = FastAPI(title="Anon OpenRouter Chat")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
@@ -143,4 +143,4 @@ async def _stream(messages: list) -> AsyncGenerator[str, None]:
 
 def run():
     import uvicorn
-    uvicorn.run("privatechat.main:app", host="127.0.0.1", port=8000, reload=False)
+    uvicorn.run("anon_openrouter_chat.main:app", host="127.0.0.1", port=8000, reload=False)

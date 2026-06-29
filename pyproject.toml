@@ -1,5 +1,5 @@
 [project]
-name = "privatechat"
+name = "anon_openrouter_chat"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
-privatechat = "privatechat.main:run"
+anon_openrouter_chat = "anon_openrouter_chat.main:run"
 
 [build-system]
 requires = ["hatchling"]
