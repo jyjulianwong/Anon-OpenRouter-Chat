@@ -54,6 +54,10 @@ html, body {
   height: 100%;
 }
 
+#root {
+  height: 100%;
+}
+
 body {
   font-family: var(--font);
   font-size: 11px;
@@ -264,9 +268,8 @@ body {
   padding-top: 3px;
 }
 
-/* icon-btn alias used by JS (attach button) */
 .icon-btn {
-  /* inherits from .xp-toolbar-btn via HTML classes */
+  /* inherits from .xp-toolbar-btn */
 }
 
 /* ══ Messages area ═════════════════════════════════════════════════════════ */
@@ -693,4 +696,83 @@ body {
 }
 ::-webkit-scrollbar-button:active {
   border-color: var(--xp-btn-dark) var(--xp-btn-hi) var(--xp-btn-hi) var(--xp-btn-dark);
+}
+
+/* ══ Settings modal ════════════════════════════════════════════════════════ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-window {
+  background: var(--xp-bg);
+  border-left:   3px solid var(--xp-win-border);
+  border-right:  3px solid var(--xp-win-border);
+  border-bottom: 3px solid var(--xp-win-border);
+  box-shadow:
+    inset  1px 0 0 var(--xp-win-inner),
+    inset -1px 0 0 var(--xp-win-inner),
+    inset  0 -1px 0 var(--xp-win-inner);
+  width: min(380px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-body {
+  padding: 12px 14px 4px;
+}
+
+.modal-field {
+  margin-bottom: 10px;
+}
+
+.modal-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  color: var(--xp-text);
+}
+
+.modal-field input[type="text"],
+.modal-field input[type="number"],
+.modal-field textarea {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 11px;
+  padding: 3px 5px;
+  border: 1px solid var(--xp-input-bdr);
+  background: var(--xp-surface);
+  color: var(--xp-text);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+.modal-field input:focus,
+.modal-field textarea:focus {
+  border-color: #5a86bb;
+}
+
+.modal-field textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.modal-field .field-hint {
+  font-size: 10px;
+  color: var(--xp-text-muted);
+  margin-top: 2px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 8px 14px 12px;
 }
