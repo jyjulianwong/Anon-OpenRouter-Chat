@@ -382,12 +382,13 @@ body {
 }
 
 .bubble img.attached {
-  display: block;
-  max-width: min(380px, 100%);
-  max-height: 240px;
+  display: inline-block;
+  max-width: min(280px, 100%);
+  max-height: 200px;
   border: 1px solid var(--xp-btn-shadow);
-  margin-bottom: 6px;
+  margin: 0 4px 6px 0;
   object-fit: contain;
+  vertical-align: top;
 }
 
 /* ══ Markdown in bubble ════════════════════════════════════════════════════ */
@@ -554,7 +555,11 @@ body {
 /* ── Image preview ─────────────────────────────────────────────────────── */
 
 .image-preview-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
   padding: 6px 8px 0;
+  overflow-x: auto;
 }
 
 .image-preview-item {

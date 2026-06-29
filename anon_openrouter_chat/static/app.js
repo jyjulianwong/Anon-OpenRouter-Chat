@@ -1,7 +1,7 @@
 // Conversation history in OpenAI message format
 let messages = [];
-// Base64 data URL of attached image, or null
-let pendingImage = null;
+// Base64 data URLs of attached images
+let pendingImages = [];
 // Whether a response is currently streaming
 let streaming = false;
 
@@ -12,8 +12,6 @@ const sendBtn = document.getElementById("send-btn");
 const attachBtn = document.getElementById("attach-btn");
 const fileInput = document.getElementById("file-input");
 const imagePreviewBar = document.getElementById("image-preview-bar");
-const imagePreview = document.getElementById("image-preview");
-const removeImageBtn = document.getElementById("remove-image-btn");
 const newChatBtn = document.getElementById("new-chat-btn");
 const exportBtn = document.getElementById("export-btn");
 const importBtn = document.getElementById("import-btn");
@@ -37,7 +35,7 @@ messageInput.addEventListener("keydown", (e) => {
 });
 
 function updateSendBtn() {
-  sendBtn.disabled = streaming || (messageInput.value.trim() === "" && !pendingImage);
+  sendBtn.disabled = streaming || (messageInput.value.trim() === "" && pendingImages.length === 0);
 }
 
 // ── Image attachment ─────────────────────────────────────────────────────────
@@ -45,25 +43,55 @@ function updateSendBtn() {
 attachBtn.addEventListener("click", () => fileInput.click());
 
 fileInput.addEventListener("change", () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    pendingImage = e.target.result;
-    imagePreview.src = pendingImage;
-    imagePreviewBar.classList.remove("hidden");
-    updateSendBtn();
-  };
-  reader.readAsDataURL(file);
+  const files = Array.from(fileInput.files);
+  if (!files.length) return;
+  let loaded = 0;
+  for (const file of files) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      pendingImages.push(e.target.result);
+      loaded++;
+      if (loaded === files.length) {
+        renderImagePreviews();
+        updateSendBtn();
+      }
+    };
+    reader.readAsDataURL(file);
+  }
   fileInput.value = "";
 });
 
-removeImageBtn.addEventListener("click", clearPendingImage);
+function renderImagePreviews() {
+  imagePreviewBar.innerHTML = "";
+  if (pendingImages.length === 0) {
+    imagePreviewBar.classList.add("hidden");
+    return;
+  }
+  imagePreviewBar.classList.remove("hidden");
+  pendingImages.forEach((dataUrl, i) => {
+    const item = document.createElement("div");
+    item.className = "image-preview-item";
+    const img = document.createElement("img");
+    img.src = dataUrl;
+    img.alt = `Attached image ${i + 1}`;
+    const btn = document.createElement("button");
+    btn.className = "remove-image-btn";
+    btn.setAttribute("aria-label", "Remove image");
+    btn.innerHTML = `<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
+    btn.addEventListener("click", () => {
+      pendingImages.splice(i, 1);
+      renderImagePreviews();
+      updateSendBtn();
+    });
+    item.appendChild(img);
+    item.appendChild(btn);
+    imagePreviewBar.appendChild(item);
+  });
+}
 
-function clearPendingImage() {
-  pendingImage = null;
-  imagePreview.src = "";
-  imagePreviewBar.classList.add("hidden");
+function clearPendingImages() {
+  pendingImages = [];
+  renderImagePreviews();
   updateSendBtn();
 }
 
@@ -74,7 +102,7 @@ newChatBtn.addEventListener("click", () => {
   messages = [];
   messagesEl.innerHTML = "";
   messagesEl.appendChild(emptyStateEl());
-  clearPendingImage();
+  clearPendingImages();
   messageInput.value = "";
   messageInput.style.height = "auto";
   updateSendBtn();
@@ -138,16 +166,16 @@ function rebuildChatUI() {
   for (const msg of messages) {
     if (msg.role === "user") {
       let text = "";
-      let image = null;
+      let images = [];
       if (typeof msg.content === "string") {
         text = msg.content;
       } else if (Array.isArray(msg.content)) {
         for (const part of msg.content) {
           if (part.type === "text") text = part.text;
-          if (part.type === "image_url") image = part.image_url.url;
+          if (part.type === "image_url") images.push(part.image_url.url);
         }
       }
-      addUserBubble(text, image);
+      addUserBubble(text, images);
     } else if (msg.role === "assistant") {
       const bubble = addAssistantBubble();
       finalizeMessage(bubble, typeof msg.content === "string" ? msg.content : "");
@@ -162,7 +190,7 @@ sendBtn.addEventListener("click", submit);
 
 async function submit() {
   const text = messageInput.value.trim();
-  if (streaming || (!text && !pendingImage)) return;
+  if (streaming || (!text && pendingImages.length === 0)) return;
 
   // Remove empty state
   const es = document.getElementById("empty-state");
@@ -170,10 +198,12 @@ async function submit() {
 
   // Build message content
   let content;
-  if (pendingImage) {
+  if (pendingImages.length > 0) {
     content = [];
     if (text) content.push({ type: "text", text });
-    content.push({ type: "image_url", image_url: { url: pendingImage } });
+    for (const img of pendingImages) {
+      content.push({ type: "image_url", image_url: { url: img } });
+    }
   } else {
     content = text;
   }
@@ -181,8 +211,8 @@ async function submit() {
   const userMsg = { role: "user", content };
   messages.push(userMsg);
 
-  addUserBubble(text, pendingImage);
-  clearPendingImage();
+  addUserBubble(text, pendingImages.slice());
+  clearPendingImages();
   messageInput.value = "";
   messageInput.style.height = "auto";
   updateSendBtn();
@@ -252,7 +282,7 @@ async function submit() {
 
 // ── DOM helpers ──────────────────────────────────────────────────────────────
 
-function addUserBubble(text, image) {
+function addUserBubble(text, images) {
   const msg = document.createElement("div");
   msg.className = "message user";
   msg.innerHTML = `
@@ -260,12 +290,14 @@ function addUserBubble(text, image) {
     <div class="bubble user-bubble"></div>
   `;
   const bubble = msg.querySelector(".bubble");
-  if (image) {
-    const img = document.createElement("img");
-    img.src = image;
-    img.className = "attached";
-    img.alt = "Attached image";
-    bubble.appendChild(img);
+  if (Array.isArray(images)) {
+    for (let i = 0; i < images.length; i++) {
+      const img = document.createElement("img");
+      img.src = images[i];
+      img.className = "attached";
+      img.alt = `Attached image ${i + 1}`;
+      bubble.appendChild(img);
+    }
   }
   if (text) {
     const p = document.createElement("p");
