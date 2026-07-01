@@ -398,6 +398,7 @@ body {
 
 .bubble p                  { margin-bottom: 0.4em; }
 .bubble p:last-child        { margin-bottom: 0; }
+.message.user .bubble p    { white-space: pre-wrap; }
 .bubble ul, .bubble ol      { padding-left: 1.4em; margin-bottom: 0.4em; }
 .bubble li                  { margin-bottom: 0.1em; }
 .bubble h1, .bubble h2,
