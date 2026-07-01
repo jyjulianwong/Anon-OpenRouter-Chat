@@ -14,13 +14,6 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
     ta.style.height = ta.scrollHeight + 'px';
   }, [text]);
 
-  function handleKeyDown(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (canSend) handleSend();
-    }
-  }
-
   function handleSend() {
     if (!canSend) return;
     onSubmit(text);
@@ -101,7 +94,6 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
             ref={textareaRef}
             value={text}
             onChange={e => setText(e.target.value)}
-            onKeyDown={handleKeyDown}
             placeholder="Type a message..."
             rows={1}
             aria-label="Message input"
