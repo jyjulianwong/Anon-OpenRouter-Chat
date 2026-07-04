@@ -1,5 +1,5 @@
 export const DEFAULT_SETTINGS = {
-  model: 'qwen/qwen3.6-flash',
+  model: 'google/gemini-2.5-flash-lite',
   temperature: 1.0,
   maxTokens: '',
   systemPrompt: '',

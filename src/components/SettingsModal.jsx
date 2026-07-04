@@ -26,7 +26,7 @@ export default function SettingsModal({ settings, onSave, onClose }) {
                 type="text"
                 value={local.model}
                 onChange={e => set('model', e.target.value)}
-                placeholder="e.g. qwen/qwen3-flash"
+                placeholder="e.g. google/gemini-2.5-flash-lite"
               />
               <p className="field-hint">Any OpenRouter model ID, e.g. <em>anthropic/claude-sonnet-4-5</em></p>
             </div>
