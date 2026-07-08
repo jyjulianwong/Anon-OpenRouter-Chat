@@ -192,6 +192,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
   padding: 6px 10px;
   background: var(--xp-bg);
   border-bottom: 2px solid;
@@ -205,7 +207,8 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  min-width: 0;
+  min-width: max-content;
+  flex: 1;
 }
 
 .status-dot {
@@ -234,6 +237,7 @@ body {
 .header-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
 }
 
@@ -782,4 +786,53 @@ body {
   justify-content: flex-end;
   gap: 6px;
   padding: 10px 17px 14px;
+}
+
+/* ══ Dropdown menus (XP context-menu style) ════════════════════════════════ */
+
+.xp-dropdown-wrap {
+  position: relative;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  margin-left: 2px;
+  line-height: 1;
+}
+
+.xp-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  z-index: 500;
+  background: var(--xp-surface);
+  border: 1px solid;
+  border-color: var(--xp-btn-hi) var(--xp-btn-dark) var(--xp-btn-dark) var(--xp-btn-hi);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.35);
+  min-width: 130px;
+  padding: 2px 0;
+}
+
+.xp-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 3px 18px 3px 10px;
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--xp-text);
+  background: none;
+  border: none;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.xp-dropdown-item:hover:not(:disabled) {
+  background: var(--xp-accent);
+  color: #ffffff;
+}
+
+.xp-dropdown-item:disabled {
+  color: var(--xp-text-muted);
+  cursor: default;
 }

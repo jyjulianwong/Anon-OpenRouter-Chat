@@ -1,16 +1,24 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
-export default function Header({ onNewChat, onExport, onImport, onSettings, streaming, hasMessages }) {
-  const importInputRef = useRef(null);
+export default function Header({ onNewChat, onExport, onExportSettings, onImport, onImportSettings, onSettings, streaming, hasMessages }) {
+  const importChatRef = useRef(null);
+  const importSettingsRef = useRef(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
-  function handleImportFile(e) {
+  useEffect(() => {
+    if (!openDropdown) return;
+    function handleOutside() { setOpenDropdown(null); }
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, [openDropdown]);
+
+  function handleImportChatFile(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
-        const imported = JSON.parse(ev.target.result);
-        onImport(imported);
+        onImport(JSON.parse(ev.target.result));
       } catch {
         alert('Failed to import: not a valid chat file.');
       }
@@ -18,6 +26,37 @@ export default function Header({ onNewChat, onExport, onImport, onSettings, stre
     reader.readAsText(file);
     e.target.value = '';
   }
+
+  function handleImportSettingsFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        onImportSettings(JSON.parse(ev.target.result));
+      } catch {
+        alert('Failed to import: not a valid settings file.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+
+  const importIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+  );
+
+  const exportIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+  );
 
   return (
     <div className="header-toolbar">
@@ -27,28 +66,62 @@ export default function Header({ onNewChat, onExport, onImport, onSettings, stre
         <span className="contact-status-txt">&nbsp;– Online</span>
       </div>
       <div className="header-actions">
-        <button className="xp-toolbar-btn" onClick={() => importInputRef.current.click()} title="Import chat">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Import
-        </button>
-        <button className="xp-toolbar-btn" onClick={onExport} disabled={!hasMessages} title="Export chat">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          Export
-        </button>
+
+        <div className="xp-dropdown-wrap" onMouseDown={e => e.stopPropagation()}>
+          <button
+            className="xp-toolbar-btn"
+            onClick={() => setOpenDropdown(openDropdown === 'import' ? null : 'import')}
+            title="Import"
+          >
+            {importIcon}
+            Import
+            <span className="dropdown-arrow">&#9662;</span>
+          </button>
+          {openDropdown === 'import' && (
+            <div className="xp-dropdown-menu">
+              <button className="xp-dropdown-item" onClick={() => { setOpenDropdown(null); importChatRef.current.click(); }}>
+                Chat history
+              </button>
+              <button className="xp-dropdown-item" onClick={() => { setOpenDropdown(null); importSettingsRef.current.click(); }}>
+                Settings
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="xp-dropdown-wrap" onMouseDown={e => e.stopPropagation()}>
+          <button
+            className="xp-toolbar-btn"
+            onClick={() => setOpenDropdown(openDropdown === 'export' ? null : 'export')}
+            title="Export"
+          >
+            {exportIcon}
+            Export
+            <span className="dropdown-arrow">&#9662;</span>
+          </button>
+          {openDropdown === 'export' && (
+            <div className="xp-dropdown-menu">
+              <button
+                className="xp-dropdown-item"
+                onClick={() => { setOpenDropdown(null); onExport(); }}
+                disabled={!hasMessages}
+              >
+                Chat history
+              </button>
+              <button className="xp-dropdown-item" onClick={() => { setOpenDropdown(null); onExportSettings(); }}>
+                Settings
+              </button>
+            </div>
+          )}
+        </div>
+
         <button className="xp-toolbar-btn" onClick={onNewChat} disabled={streaming} title="New chat">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M12 5v14M5 12h14"/>
           </svg>
           New chat
         </button>
+
         <button className="xp-toolbar-btn" onClick={onSettings} title="Settings">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="3"/>
@@ -56,13 +129,9 @@ export default function Header({ onNewChat, onExport, onImport, onSettings, stre
           </svg>
           Settings
         </button>
-        <input
-          ref={importInputRef}
-          type="file"
-          accept=".json"
-          className="hidden"
-          onChange={handleImportFile}
-        />
+
+        <input ref={importChatRef} type="file" accept=".json" className="hidden" onChange={handleImportChatFile} />
+        <input ref={importSettingsRef} type="file" accept=".json" className="hidden" onChange={handleImportSettingsFile} />
       </div>
     </div>
   );

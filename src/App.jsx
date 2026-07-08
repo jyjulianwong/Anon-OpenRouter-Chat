@@ -124,6 +124,17 @@ export default function App() {
     URL.revokeObjectURL(url);
   }, [messages]);
 
+  const handleExportSettings = useCallback(() => {
+    const json = JSON.stringify(settings, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `settings-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [settings]);
+
   const handleImport = useCallback((imported) => {
     if (!Array.isArray(imported)) {
       alert('Failed to import: not a valid chat file.');
@@ -131,6 +142,14 @@ export default function App() {
     }
     setMessages(imported);
     setPendingImages([]);
+  }, []);
+
+  const handleImportSettings = useCallback((imported) => {
+    if (typeof imported !== 'object' || Array.isArray(imported) || imported === null) {
+      alert('Failed to import: not a valid settings file.');
+      return;
+    }
+    setSettings(prev => ({ ...prev, ...imported }));
   }, []);
 
   const handleSaveSettings = useCallback((newSettings) => {
@@ -145,7 +164,9 @@ export default function App() {
         <Header
           onNewChat={handleNewChat}
           onExport={handleExport}
+          onExportSettings={handleExportSettings}
           onImport={handleImport}
+          onImportSettings={handleImportSettings}
           onSettings={() => setShowSettings(true)}
           streaming={streaming}
           hasMessages={messages.length > 0}
