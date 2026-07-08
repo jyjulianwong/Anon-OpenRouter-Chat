@@ -21,6 +21,27 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
   }
 
+  function handlePaste(e) {
+    const items = Array.from(e.clipboardData?.items ?? []);
+    const imageItems = items.filter(item => item.kind === 'file' && item.type.startsWith('image/'));
+    if (!imageItems.length) return;
+    e.preventDefault();
+    const newImages = [];
+    let loaded = 0;
+    for (const item of imageItems) {
+      const file = item.getAsFile();
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        newImages.push(ev.target.result);
+        loaded++;
+        if (loaded === imageItems.length) {
+          onImagesChange(prev => [...prev, ...newImages]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   function handleFileChange(e) {
     const files = Array.from(e.target.files);
     if (!files.length) return;
@@ -94,6 +115,7 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
             ref={textareaRef}
             value={text}
             onChange={e => setText(e.target.value)}
+            onPaste={handlePaste}
             placeholder="Type a message..."
             rows={1}
             aria-label="Message input"
