@@ -478,7 +478,7 @@ body {
   background: var(--xp-bg);
   border-top: 2px solid var(--xp-btn-shadow);
   box-shadow: 0 -1px 0 var(--xp-btn-hi) inset;
-  padding-bottom: 8px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
 }
 
 /* ── Format toolbar (decorative, MSN-style) ────────────────────────────── */
