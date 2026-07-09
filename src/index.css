@@ -80,7 +80,8 @@ body {
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100vh;   /* NOTE: iOS: fallback */
+  height: 100dvh;  /* NOTE: iOS: tracks actual visible height as browser chrome shows/hides */
   max-width: 800px;
   margin: 0 auto;
   /* XP window outer border */
