@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TitleBar from './TitleBar.jsx';
+import { AVAILABLE_MODELS } from '../config.js';
 
 export default function SettingsModal({ settings, onSave, onClose }) {
   const [local, setLocal] = useState({ ...settings });
+  const [modelOpen, setModelOpen] = useState(false);
+
+  useEffect(() => {
+    if (!modelOpen) return;
+    function handleOutside() { setModelOpen(false); }
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, [modelOpen]);
 
   function set(key, value) {
     setLocal(prev => ({ ...prev, [key]: value }));
@@ -20,15 +29,32 @@ export default function SettingsModal({ settings, onSave, onClose }) {
         <form onSubmit={handleSave}>
           <div className="modal-body">
             <div className="modal-field">
-              <label htmlFor="s-model">Model</label>
-              <input
-                id="s-model"
-                type="text"
-                value={local.model}
-                onChange={e => set('model', e.target.value)}
-                placeholder="e.g. google/gemini-2.5-flash-lite"
-              />
-              <p className="field-hint">Any OpenRouter model ID, e.g. <em>anthropic/claude-sonnet-4-5</em></p>
+              <label>Model</label>
+              <div className="xp-dropdown-wrap" onMouseDown={e => e.stopPropagation()}>
+                <button
+                  type="button"
+                  className="xp-toolbar-btn"
+                  style={{ width: '100%', justifyContent: 'space-between' }}
+                  onClick={() => setModelOpen(o => !o)}
+                >
+                  {local.model}
+                  <span className="dropdown-arrow">&#9662;</span>
+                </button>
+                {modelOpen && (
+                  <div className="xp-dropdown-menu" style={{ width: '100%' }}>
+                    {AVAILABLE_MODELS.map(m => (
+                      <button
+                        key={m}
+                        type="button"
+                        className="xp-dropdown-item"
+                        onClick={() => { set('model', m); setModelOpen(false); }}
+                      >
+                        {m}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="modal-field">
               <label htmlFor="s-temp">Temperature</label>
