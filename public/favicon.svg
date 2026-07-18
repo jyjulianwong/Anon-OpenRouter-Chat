@@ -1,9 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="512" height="512">
-  <rect width="16" height="16" rx="2.5" fill="#1460d2"/>
-  <ellipse cx="5" cy="5.5" rx="4.2" ry="5" fill="#f47920" opacity="0.92"/>
-  <ellipse cx="11" cy="5.5" rx="4.2" ry="5" fill="#f47920" opacity="0.92"/>
-  <ellipse cx="5" cy="11.5" rx="3.5" ry="4" fill="#fbb040" opacity="0.88"/>
-  <ellipse cx="11" cy="11.5" rx="3.5" ry="4" fill="#fbb040" opacity="0.88"/>
-  <ellipse cx="8" cy="9" rx="1.1" ry="4" fill="#3a2000"/>
-  <circle cx="8" cy="4.8" r="1.4" fill="#4a3010"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" fill="#1a3a5c"/>
+  <text
+    x="16"
+    y="22"
+    font-family="'Open Sans', Arial, sans-serif"
+    font-weight="700"
+    font-size="12.5"
+    fill="#ffffff"
+    text-anchor="middle"
+    letter-spacing="-0.3"
+  >JYJW</text>
 </svg>
