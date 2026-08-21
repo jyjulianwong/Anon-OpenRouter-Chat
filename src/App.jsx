@@ -105,6 +105,11 @@ export default function App() {
     }
   }, [messages, pendingImages, settings, streaming]);
 
+  const handleUndo = useCallback(() => {
+    if (streaming || messages.length === 0) return;
+    setMessages(prev => prev.slice(0, -1));
+  }, [streaming, messages.length]);
+
   const handleNewChat = useCallback(() => {
     if (streaming) return;
     setMessages([]);
@@ -181,6 +186,8 @@ export default function App() {
           pendingImages={pendingImages}
           onImagesChange={setPendingImages}
           onSubmit={handleSubmit}
+          onUndo={handleUndo}
+          canUndo={!streaming && messages.length > 0}
         />
       </footer>
       {showSettings && (

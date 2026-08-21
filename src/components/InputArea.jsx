@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-export default function InputArea({ streaming, pendingImages, onImagesChange, onSubmit }) {
+export default function InputArea({ streaming, pendingImages, onImagesChange, onSubmit, onUndo, canUndo }) {
   const [text, setText] = useState('');
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -125,7 +125,7 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
 
       <div className="input-actions">
         <button
-          className="xp-toolbar-btn icon-btn"
+          className="xp-toolbar-btn icon-btn attach-btn"
           onClick={() => fileInputRef.current.click()}
           aria-label="Attach image"
           title="Attach image"
@@ -134,6 +134,19 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
           </svg>
           Attach
+        </button>
+        <button
+          className="xp-toolbar-btn icon-btn"
+          onClick={onUndo}
+          disabled={!canUndo}
+          aria-label="Undo last message"
+          title="Undo last message"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M9 14 4 9l5-5"/>
+            <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>
+          </svg>
+          Undo
         </button>
         <button
           className="send-btn"

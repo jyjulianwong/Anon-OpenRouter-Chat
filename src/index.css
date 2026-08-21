@@ -266,11 +266,16 @@ body {
   background: #d9d5c5;
 }
 
-.xp-toolbar-btn:active {
+.xp-toolbar-btn:active:not(:disabled) {
   border-color: var(--xp-btn-shadow) var(--xp-btn-hi) var(--xp-btn-hi) var(--xp-btn-shadow);
   box-shadow: none;
   padding-left: 11px;
   padding-top: 3px;
+}
+
+.xp-toolbar-btn:disabled {
+  color: var(--xp-text-muted);
+  cursor: default;
 }
 
 .icon-btn {
@@ -645,6 +650,10 @@ body {
   justify-content: flex-end;
   gap: 6px;
   padding: 0 10px 3px;
+}
+
+.input-actions .attach-btn {
+  margin-right: auto;
 }
 
 /* ── Send button (primary XP push-button) ──────────────────────────────── */
