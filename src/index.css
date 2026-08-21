@@ -656,41 +656,10 @@ body {
   margin-right: auto;
 }
 
-/* ── Send button (primary XP push-button) ──────────────────────────────── */
+/* ── Send button (primary XP push-button, shares .xp-toolbar-btn look) ──── */
 
 .send-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 22px;
-  height: 27px;
-  min-width: 89px;
-  font-family: var(--font);
-  font-size: 13px;
-  color: var(--xp-text);
-  background: var(--xp-btn);
-  border: 1px solid;
-  border-color: var(--xp-btn-hi) var(--xp-btn-shadow) var(--xp-btn-shadow) var(--xp-btn-hi);
-  border-radius: var(--radius-sm);
-  box-shadow: 1px 1px 0 var(--xp-btn-dark);
-  cursor: pointer;
-}
-
-.send-btn:hover:not(:disabled) {
-  background: #d9d5c5;
-}
-
-.send-btn:active:not(:disabled) {
-  border-color: var(--xp-btn-shadow) var(--xp-btn-hi) var(--xp-btn-hi) var(--xp-btn-shadow);
-  box-shadow: none;
-  padding-left: 23px;
-  padding-top: 5px;
-}
-
-.send-btn:disabled {
-  color: var(--xp-text-muted);
-  cursor: default;
-  box-shadow: 1px 1px 0 var(--xp-btn-dark);
+  font-weight: bold;
 }
 
 /* ══ Classic Windows scrollbar ═════════════════════════════════════════════ */

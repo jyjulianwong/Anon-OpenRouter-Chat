@@ -149,11 +149,16 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
           Undo
         </button>
         <button
-          className="send-btn"
+          className="xp-toolbar-btn icon-btn send-btn"
           onClick={handleSend}
           disabled={!canSend}
           aria-label="Send message"
+          title="Send message"
         >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M22 2 11 13"/>
+            <path d="M22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
           Send
         </button>
         <input
