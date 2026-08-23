@@ -92,7 +92,7 @@ export default function SettingsModal({ settings, onSave, onClose }) {
           </div>
           <div className="modal-actions">
             <button type="button" className="xp-toolbar-btn" onClick={onClose}>Cancel</button>
-            <button type="submit" className="send-btn">Save</button>
+            <button type="submit" className="xp-toolbar-btn send-btn">Save</button>
           </div>
         </form>
       </div>
