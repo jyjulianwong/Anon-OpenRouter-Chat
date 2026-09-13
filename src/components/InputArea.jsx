@@ -1,11 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 
-export default function InputArea({ streaming, pendingImages, onImagesChange, onSubmit, onUndo, canUndo }) {
+function isVideo(mimeType) {
+  return mimeType.startsWith('video/');
+}
+
+export default function InputArea({ streaming, pendingAttachments, onAttachmentsChange, onSubmit, onUndo, canUndo }) {
   const [text, setText] = useState('');
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const canSend = !streaming && (text.trim() !== '' || pendingImages.length > 0);
+  const canSend = !streaming && (text.trim() !== '' || pendingAttachments.length > 0);
 
   useEffect(() => {
     const ta = textareaRef.current;
@@ -23,19 +27,19 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
 
   function handlePaste(e) {
     const items = Array.from(e.clipboardData?.items ?? []);
-    const imageItems = items.filter(item => item.kind === 'file' && item.type.startsWith('image/'));
-    if (!imageItems.length) return;
+    const mediaItems = items.filter(item => item.kind === 'file' && (item.type.startsWith('image/') || item.type.startsWith('video/')));
+    if (!mediaItems.length) return;
     e.preventDefault();
-    const newImages = [];
+    const newAttachments = [];
     let loaded = 0;
-    for (const item of imageItems) {
+    for (const item of mediaItems) {
       const file = item.getAsFile();
       const reader = new FileReader();
       reader.onload = (ev) => {
-        newImages.push(ev.target.result);
+        newAttachments.push({ url: ev.target.result, mimeType: item.type });
         loaded++;
-        if (loaded === imageItems.length) {
-          onImagesChange(prev => [...prev, ...newImages]);
+        if (loaded === mediaItems.length) {
+          onAttachmentsChange(prev => [...prev, ...newAttachments]);
         }
       };
       reader.readAsDataURL(file);
@@ -45,15 +49,15 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
   function handleFileChange(e) {
     const files = Array.from(e.target.files);
     if (!files.length) return;
-    const newImages = [];
+    const newAttachments = [];
     let loaded = 0;
     for (const file of files) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        newImages.push(ev.target.result);
+        newAttachments.push({ url: ev.target.result, mimeType: file.type });
         loaded++;
         if (loaded === files.length) {
-          onImagesChange(prev => [...prev, ...newImages]);
+          onAttachmentsChange(prev => [...prev, ...newAttachments]);
         }
       };
       reader.readAsDataURL(file);
@@ -61,8 +65,8 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
     e.target.value = '';
   }
 
-  function removeImage(index) {
-    onImagesChange(prev => prev.filter((_, i) => i !== index));
+  function removeAttachment(index) {
+    onAttachmentsChange(prev => prev.filter((_, i) => i !== index));
   }
 
   return (
@@ -91,15 +95,19 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
       </div>
 
       <div className="input-wrapper">
-        {pendingImages.length > 0 && (
+        {pendingAttachments.length > 0 && (
           <div className="image-preview-bar">
-            {pendingImages.map((src, i) => (
+            {pendingAttachments.map((att, i) => (
               <div key={i} className="image-preview-item">
-                <img src={src} alt={`Attached image ${i + 1}`} />
+                {isVideo(att.mimeType) ? (
+                  <video src={att.url} muted preload="metadata" />
+                ) : (
+                  <img src={att.url} alt={`Attached image ${i + 1}`} />
+                )}
                 <button
                   className="remove-image-btn"
-                  aria-label="Remove image"
-                  onClick={() => removeImage(i)}
+                  aria-label="Remove attachment"
+                  onClick={() => removeAttachment(i)}
                 >
                   <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
                     <path d="M18 6L6 18M6 6l12 12"/>
@@ -127,8 +135,8 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
         <button
           className="xp-toolbar-btn icon-btn attach-btn"
           onClick={() => fileInputRef.current.click()}
-          aria-label="Attach image"
-          title="Attach image"
+          aria-label="Attach image or video"
+          title="Attach image or video"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
@@ -164,7 +172,7 @@ export default function InputArea({ streaming, pendingImages, onImagesChange, on
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept="image/*,video/*"
           multiple
           className="hidden"
           onChange={handleFileChange}

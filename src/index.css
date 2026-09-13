@@ -395,7 +395,8 @@ body {
   font-family: var(--font);
 }
 
-.bubble img.attached {
+.bubble img.attached,
+.bubble video.attached {
   display: inline-block;
   max-width: min(330px, 100%);
   max-height: 235px;
@@ -582,7 +583,8 @@ body {
   display: inline-flex;
 }
 
-.image-preview-item img {
+.image-preview-item img,
+.image-preview-item video {
   height: 66px;
   width: auto;
   max-width: 95px;

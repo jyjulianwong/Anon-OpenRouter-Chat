@@ -20,7 +20,7 @@ function loadSettings() {
 
 export default function App() {
   const [messages, setMessages] = useState([]);
-  const [pendingImages, setPendingImages] = useState([]);
+  const [pendingAttachments, setPendingAttachments] = useState([]);
   const [streaming, setStreaming] = useState(false);
   const [settings, setSettings] = useState(loadSettings);
   const [showSettings, setShowSettings] = useState(false);
@@ -42,14 +42,18 @@ export default function App() {
   }, [messages]);
 
   const handleSubmit = useCallback(async (text) => {
-    if (streaming || (!text.trim() && pendingImages.length === 0)) return;
+    if (streaming || (!text.trim() && pendingAttachments.length === 0)) return;
 
     let content;
-    if (pendingImages.length > 0) {
+    if (pendingAttachments.length > 0) {
       content = [];
       if (text.trim()) content.push({ type: 'text', text: text.trim() });
-      for (const img of pendingImages) {
-        content.push({ type: 'image_url', image_url: { url: img } });
+      for (const att of pendingAttachments) {
+        if (att.mimeType.startsWith('video/')) {
+          content.push({ type: 'video_url', video_url: { url: att.url } });
+        } else {
+          content.push({ type: 'image_url', image_url: { url: att.url } });
+        }
       }
     } else {
       content = text.trim();
@@ -58,7 +62,7 @@ export default function App() {
     const userMsg = { role: 'user', content };
 
     setMessages(prev => [...prev, userMsg, { role: 'assistant', content: '', _streaming: true }]);
-    setPendingImages([]);
+    setPendingAttachments([]);
     setStreaming(true);
     accumulatedRef.current = '';
 
@@ -103,7 +107,7 @@ export default function App() {
     } finally {
       setStreaming(false);
     }
-  }, [messages, pendingImages, settings, streaming]);
+  }, [messages, pendingAttachments, settings, streaming]);
 
   const handleUndo = useCallback(() => {
     if (streaming || messages.length === 0) return;
@@ -113,7 +117,7 @@ export default function App() {
   const handleNewChat = useCallback(() => {
     if (streaming) return;
     setMessages([]);
-    setPendingImages([]);
+    setPendingAttachments([]);
   }, [streaming]);
 
   const handleExport = useCallback(() => {
@@ -146,7 +150,7 @@ export default function App() {
       return;
     }
     setMessages(imported);
-    setPendingImages([]);
+    setPendingAttachments([]);
   }, []);
 
   const handleImportSettings = useCallback((imported) => {
@@ -183,8 +187,8 @@ export default function App() {
       <footer className="input-area">
         <InputArea
           streaming={streaming}
-          pendingImages={pendingImages}
-          onImagesChange={setPendingImages}
+          pendingAttachments={pendingAttachments}
+          onAttachmentsChange={setPendingAttachments}
           onSubmit={handleSubmit}
           onUndo={handleUndo}
           canUndo={!streaming && messages.length > 0}

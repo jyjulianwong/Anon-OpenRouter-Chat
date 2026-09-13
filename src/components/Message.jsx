@@ -15,18 +15,23 @@ export default function Message({ message }) {
     if (role === 'user') {
       let text = '';
       let images = [];
+      let videos = [];
       if (typeof content === 'string') {
         text = content;
       } else if (Array.isArray(content)) {
         for (const part of content) {
           if (part.type === 'text') text = part.text;
           if (part.type === 'image_url') images.push(part.image_url.url);
+          if (part.type === 'video_url') videos.push(part.video_url.url);
         }
       }
       return (
         <div className="bubble">
           {images.map((src, i) => (
             <img key={i} src={src} className="attached" alt={`Attached image ${i + 1}`} />
+          ))}
+          {videos.map((src, i) => (
+            <video key={i} src={src} className="attached" controls />
           ))}
           {text && <p>{text}</p>}
         </div>
