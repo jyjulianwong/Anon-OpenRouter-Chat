@@ -475,8 +475,33 @@ body {
   50%       { opacity: 0; }
 }
 
-.error-text {
+.error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fde7e4;
+  border: 1px solid var(--xp-danger);
+  padding: 8px 10px;
+  margin-left: -21px;
+}
+
+.error-icon {
+  flex-shrink: 0;
   color: var(--xp-danger);
+  margin-top: 1px;
+}
+
+.error-box strong {
+  display: block;
+  color: var(--xp-danger);
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.error-text {
+  color: var(--xp-text);
+  margin: 0;
+  word-break: break-word;
 }
 
 /* ══ Input area ════════════════════════════════════════════════════════════ */

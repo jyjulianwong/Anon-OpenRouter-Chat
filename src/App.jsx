@@ -73,6 +73,7 @@ export default function App() {
       ? [{ role: 'system', content: settings.systemPrompt }, ...apiHistory]
       : apiHistory;
 
+    let errored = false;
     try {
       await streamChat({
         workerUrl: WORKER_URL,
@@ -87,6 +88,7 @@ export default function App() {
           ]);
         },
         onError(err) {
+          errored = true;
           setMessages(prev => [
             ...prev.slice(0, -1),
             { role: 'assistant', content: '', _error: err },
@@ -94,11 +96,13 @@ export default function App() {
         },
       });
 
-      const finalText = accumulatedRef.current;
-      setMessages(prev => [
-        ...prev.slice(0, -1),
-        { role: 'assistant', content: finalText },
-      ]);
+      if (!errored) {
+        const finalText = accumulatedRef.current;
+        setMessages(prev => [
+          ...prev.slice(0, -1),
+          { role: 'assistant', content: finalText },
+        ]);
+      }
     } catch (err) {
       setMessages(prev => [
         ...prev.slice(0, -1),
