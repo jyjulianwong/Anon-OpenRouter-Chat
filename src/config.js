@@ -1,6 +1,8 @@
 export const AVAILABLE_MODELS = [
   'google/gemini-2.5-flash-lite',
   'google/gemini-2.5-flash',
+  'google/gemini-3.5-flash-lite',
+  'google/gemini-3.8-flash',
   'meta-llama/llama-4-maverick',
   'meta-llama/llama-4-scout',
   'openai/gpt-5-nano',
