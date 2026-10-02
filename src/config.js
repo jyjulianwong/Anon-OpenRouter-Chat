@@ -12,7 +12,7 @@ export const AVAILABLE_MODELS = [
 ];
 
 export const DEFAULT_SETTINGS = {
-  model: 'google/gemini-2.5-flash-lite',
+  model: 'google/gemini-3.8-flash',
   temperature: 1.0,
   maxTokens: '',
   systemPrompt: '',
