@@ -9,6 +9,7 @@ export const AVAILABLE_MODELS = [
   'openai/gpt-5.4-nano',
   'qwen/qwen3.5-flash-02-23',
   'qwen/qwen3.6-flash',
+  'x-ai/grok-4.20',
 ];
 
 export const DEFAULT_SETTINGS = {
