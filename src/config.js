@@ -13,7 +13,7 @@ export const AVAILABLE_MODELS = [
 ];
 
 export const DEFAULT_SETTINGS = {
-  model: 'google/gemini-3.8-flash',
+  model: 'x-ai/grok-4.20',
   temperature: 1.0,
   maxTokens: '',
   systemPrompt: '',
