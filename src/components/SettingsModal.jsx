@@ -2,8 +2,16 @@ import { useState, useEffect } from 'react';
 import TitleBar from './TitleBar.jsx';
 import { AVAILABLE_MODELS } from '../config.js';
 
+function formatTemp(value) {
+  const n = parseFloat(value);
+  return Number.isNaN(n) ? value : n.toFixed(1);
+}
+
 export default function SettingsModal({ settings, onSave, onClose }) {
-  const [local, setLocal] = useState({ ...settings });
+  const [local, setLocal] = useState({
+    ...settings,
+    temperature: formatTemp(settings.temperature),
+  });
   const [modelOpen, setModelOpen] = useState(false);
 
   useEffect(() => {
@@ -63,9 +71,13 @@ export default function SettingsModal({ settings, onSave, onClose }) {
                 type="number"
                 min="0"
                 max="2"
-                step="0.05"
+                step="0.1"
                 value={local.temperature}
-                onChange={e => set('temperature', e.target.value)}
+                onChange={e => {
+                  const typed = /^(insert|delete)/.test(e.nativeEvent.inputType || '');
+                  set('temperature', typed ? e.target.value : formatTemp(e.target.value));
+                }}
+                onBlur={e => set('temperature', formatTemp(e.target.value))}
               />
               <p className="field-hint">0.0 – 2.0 (default 1.0)</p>
             </div>

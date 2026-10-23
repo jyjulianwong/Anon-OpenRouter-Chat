@@ -14,7 +14,7 @@ export const AVAILABLE_MODELS = [
 
 export const DEFAULT_SETTINGS = {
   model: 'x-ai/grok-4.20',
-  temperature: 1.0,
+  temperature: '1.0',
   maxTokens: '',
   systemPrompt: '',
   safePrompt: false,
