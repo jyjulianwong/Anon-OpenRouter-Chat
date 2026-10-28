@@ -1,3 +1,5 @@
+import { SYSTEM_PROMPT_PRESETS } from './prompts/index.js';
+
 export const AVAILABLE_MODELS = [
   'google/gemini-2.5-flash-lite',
   'google/gemini-2.5-flash',
@@ -16,6 +18,6 @@ export const DEFAULT_SETTINGS = {
   model: 'x-ai/grok-4.20',
   temperature: '1.0',
   maxTokens: '',
-  systemPrompt: '',
+  systemPrompt: SYSTEM_PROMPT_PRESETS.find(p => p.id === 'general').prompt,
   safePrompt: false,
 };
