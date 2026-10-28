@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import TitleBar from './TitleBar.jsx';
 import { AVAILABLE_MODELS } from '../config.js';
+import { SYSTEM_PROMPT_PRESETS } from '../prompts/index.js';
 
 function formatTemp(value) {
   const n = parseFloat(value);
@@ -13,13 +14,15 @@ export default function SettingsModal({ settings, onSave, onClose }) {
     temperature: formatTemp(settings.temperature),
   });
   const [modelOpen, setModelOpen] = useState(false);
+  const [presetOpen, setPresetOpen] = useState(false);
+  const activePreset = SYSTEM_PROMPT_PRESETS.find(p => p.prompt === local.systemPrompt.trim());
 
   useEffect(() => {
-    if (!modelOpen) return;
-    function handleOutside() { setModelOpen(false); }
+    if (!modelOpen && !presetOpen) return;
+    function handleOutside() { setModelOpen(false); setPresetOpen(false); }
     document.addEventListener('mousedown', handleOutside);
     return () => document.removeEventListener('mousedown', handleOutside);
-  }, [modelOpen]);
+  }, [modelOpen, presetOpen]);
 
   function set(key, value) {
     setLocal(prev => ({ ...prev, [key]: value }));
@@ -100,6 +103,31 @@ export default function SettingsModal({ settings, onSave, onClose }) {
                 onChange={e => set('systemPrompt', e.target.value)}
                 placeholder="Optional system prompt…"
               />
+              <div className="xp-dropdown-wrap" style={{ marginTop: 6 }} onMouseDown={e => e.stopPropagation()}>
+                <button
+                  type="button"
+                  className="xp-toolbar-btn"
+                  style={{ width: '100%', justifyContent: 'space-between' }}
+                  onClick={() => setPresetOpen(o => !o)}
+                >
+                  {activePreset ? activePreset.label : 'Choose a preset…'}
+                  <span className="dropdown-arrow">&#9662;</span>
+                </button>
+                {presetOpen && (
+                  <div className="xp-dropdown-menu" style={{ width: '100%' }}>
+                    {SYSTEM_PROMPT_PRESETS.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className="xp-dropdown-item"
+                        onClick={() => { set('systemPrompt', p.prompt); setPresetOpen(false); }}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="modal-actions">
