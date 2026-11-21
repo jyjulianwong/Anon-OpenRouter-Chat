@@ -15,8 +15,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  scan-vulnerabilities:
-    name: Scan Vulnerabilities
+  security-scan:
+    name: Security scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    needs: scan-vulnerabilities
+    needs: security-scan
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
